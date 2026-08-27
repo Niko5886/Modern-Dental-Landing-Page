@@ -552,9 +552,6 @@ function Section1() {
         </p>
 
         <div className="absolute bottom-5 left-3 md:bottom-8 md:left-4 z-10">
-          <span className="block text-black text-xs md:text-sm font-semibold mb-1 md:mb-2">
-            Trusted Dentist in West New York
-          </span>
           <h1 className="text-black text-[clamp(3rem,11vw,11rem)] font-bold leading-[0.79] tracking-tight">
             Dental
             <br />
