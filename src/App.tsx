@@ -858,6 +858,95 @@ function Footer() {
 }
 
 /* ------------------------------------------------------------------ *
+ * BACK TO TOP — floating button with a scroll-progress ring
+ * ------------------------------------------------------------------ */
+function BackToTop() {
+  const [visible, setVisible] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const top = window.scrollY
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(max > 0 ? Math.min(top / max, 1) : 0)
+      // Show after scrolling a bit; hide near the very bottom so it never
+      // overlaps the footer.
+      setVisible(top > 400 && max - top > 100)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+
+  const size = 56
+  const stroke = 2.5
+  const radius = (size - stroke) / 2
+  const circ = 2 * Math.PI * radius
+
+  return (
+    <button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      aria-label="Back to top"
+      className={`group fixed bottom-5 right-5 md:bottom-8 md:right-8 z-30 w-12 h-12 md:w-14 md:h-14 rounded-full bg-black text-white flex items-center justify-center shadow-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-neutral-800 ${
+        visible
+          ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
+          : 'opacity-0 translate-y-6 scale-90 pointer-events-none'
+      }`}
+    >
+      {/* Scroll-progress ring */}
+      <svg
+        className="absolute inset-0 h-full w-full -rotate-90"
+        viewBox={`0 0 ${size} ${size}`}
+        aria-hidden="true"
+      >
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="rgba(255,255,255,0.18)"
+          strokeWidth={stroke}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="white"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={circ}
+          strokeDashoffset={circ * (1 - progress)}
+        />
+      </svg>
+
+      {/* Arrow up */}
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 16 16"
+        fill="none"
+        aria-hidden="true"
+        className="relative transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
+      >
+        <path
+          d="M8 13V3M3 8l5-5 5 5"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
+  )
+}
+
+/* ------------------------------------------------------------------ *
  * APP
  * ------------------------------------------------------------------ */
 export default function App() {
@@ -873,6 +962,7 @@ export default function App() {
       <Section2 />
       <Section3 />
       <Footer />
+      <BackToTop />
     </div>
   )
 }
