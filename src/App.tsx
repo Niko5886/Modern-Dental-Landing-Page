@@ -282,8 +282,13 @@ function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-2 md:py-3 bg-white/80 backdrop-blur-md">
-        {/* Logo */}
-        <div className="flex flex-col">
+        {/* Logo — click returns to the top of the page */}
+        <button
+          type="button"
+          onClick={() => scrollToSection('home')}
+          aria-label="Dental Health — back to top"
+          className="flex flex-col text-left hover:opacity-70 transition-opacity duration-200"
+        >
           <span className="text-xl md:text-2xl font-extrabold uppercase tracking-tight leading-none">
             Dental
           </span>
@@ -293,7 +298,7 @@ function Navbar() {
           <span className="text-[8px] md:text-[9px] font-medium leading-none mt-1.5 md:mt-2">
             quality healthcare
           </span>
-        </div>
+        </button>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
