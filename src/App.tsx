@@ -33,6 +33,15 @@ const services: { name: string; num: string | null; active: boolean }[] = [
 
 const menuLinks = ['Home', 'Services', 'About', 'Gallery', 'Contact']
 
+/** Desktop full-screen menu: each link maps to a preview image shown on hover. */
+const desktopMenu = [
+  { label: 'Home', num: '01', image: HERO_IMAGE },
+  { label: 'Services', num: '02', image: SECTION2_IMAGE },
+  { label: 'About', num: '03', image: SECTION3_IMG1 },
+  { label: 'Gallery', num: '04', image: SECTION3_BG },
+  { label: 'Contact', num: '05', image: SECTION3_IMG2 },
+]
+
 /* ------------------------------------------------------------------ *
  * TYPES + HELPERS
  * ------------------------------------------------------------------ */
@@ -239,17 +248,29 @@ function SplashScreen({ onComplete }: { onComplete: () => void }) {
  * ------------------------------------------------------------------ */
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [activePreview, setActivePreview] = useState(0)
 
+  // Lock body scroll while either menu is open.
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
+    const locked = open || menuOpen
+    document.body.style.overflow = locked ? 'hidden' : ''
     return () => {
       document.body.style.overflow = ''
     }
-  }, [open])
+  }, [open, menuOpen])
+
+  // Close menus with the Escape key.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        setOpen(false)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   return (
     <>
@@ -271,9 +292,16 @@ function Navbar() {
         <div className="hidden md:flex items-center gap-6">
           <button
             type="button"
-            className="px-6 py-3 bg-white rounded-full border border-black text-sm font-semibold hover:bg-black hover:text-white transition-colors duration-200"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-haspopup="dialog"
+            aria-expanded={menuOpen}
+            className={`px-6 py-3 rounded-full border border-black text-sm font-semibold transition-colors duration-200 ${
+              menuOpen
+                ? 'bg-black text-white'
+                : 'bg-white text-black hover:bg-black hover:text-white'
+            }`}
           >
-            Menu
+            {menuOpen ? 'Close' : 'Menu'}
           </button>
           <span className="text-sm font-semibold text-black">Dental Emergency</span>
         </div>
@@ -355,6 +383,95 @@ function Navbar() {
                 Book Appointment
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop full-screen menu (glass overlay + hover image preview) */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Main menu"
+        inert={!menuOpen}
+        className={`hidden md:block fixed inset-0 z-40 ${
+          menuOpen ? 'pointer-events-auto' : 'pointer-events-none'
+        }`}
+      >
+        {/* Glass backdrop — click to close */}
+        <div
+          onClick={() => setMenuOpen(false)}
+          className={`absolute inset-0 bg-white/70 backdrop-blur-2xl transition-opacity duration-500 ease-out ${
+            menuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+
+        {/* Content */}
+        <div
+          className={`relative h-full w-full flex flex-col px-6 lg:px-10 pt-24 pb-6 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+          }`}
+        >
+          {/* Links + preview */}
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-8 lg:gap-12 items-center">
+            <nav
+              className="flex flex-col justify-center"
+              onMouseLeave={() => setActivePreview(0)}
+            >
+              {desktopMenu.map((item, i) => (
+                <a
+                  key={item.label}
+                  href="#"
+                  onMouseEnter={() => setActivePreview(i)}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setMenuOpen(false)
+                  }}
+                  className="group flex items-baseline gap-4 lg:gap-6 border-b border-black/10 py-3 lg:py-4"
+                  style={{
+                    opacity: menuOpen ? 1 : 0,
+                    transform: menuOpen ? 'translateX(0)' : 'translateX(24px)',
+                    transition:
+                      'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)',
+                    transitionDelay: menuOpen ? `${140 + i * 60}ms` : '0ms',
+                  }}
+                >
+                  <span className="text-sm font-semibold tabular-nums text-black/40 w-6">
+                    {item.num}
+                  </span>
+                  <span className="text-4xl lg:text-6xl font-bold text-black leading-none transition-transform duration-300 ease-out group-hover:translate-x-2">
+                    {item.label}
+                  </span>
+                </a>
+              ))}
+            </nav>
+
+            {/* Hover preview */}
+            <div className="relative h-[60vh] rounded-2xl overflow-hidden bg-neutral-100">
+              {desktopMenu.map((item, i) => (
+                <img
+                  key={item.label}
+                  src={item.image}
+                  alt=""
+                  aria-hidden="true"
+                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out ${
+                    activePreview === i ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-between shrink-0 pt-6">
+            <button
+              type="button"
+              className="px-8 py-4 bg-black rounded-full text-white text-sm font-semibold hover:bg-neutral-800 transition-colors duration-200"
+            >
+              Book Appointment
+            </button>
+            <span className="text-sm font-semibold text-black">
+              Dental Emergency · +1 (201) 555-0142
+            </span>
           </div>
         </div>
       </div>
