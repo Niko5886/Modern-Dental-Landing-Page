@@ -31,15 +31,13 @@ const services: { name: string; num: string | null; active: boolean }[] = [
   { name: 'Dental\nImplants', num: null, active: false },
 ]
 
-const menuLinks = ['Home', 'Services', 'About', 'Gallery', 'Contact']
-
-/** Desktop full-screen menu: each link maps to a preview image shown on hover. */
-const desktopMenu = [
-  { label: 'Home', num: '01', image: HERO_IMAGE },
-  { label: 'Services', num: '02', image: SECTION2_IMAGE },
-  { label: 'About', num: '03', image: SECTION3_IMG1 },
-  { label: 'Gallery', num: '04', image: SECTION3_BG },
-  { label: 'Contact', num: '05', image: SECTION3_IMG2 },
+/** Nav items — label, number badge, hover-preview image and scroll-target id. */
+const navItems = [
+  { label: 'Home', num: '01', image: HERO_IMAGE, target: 'home' },
+  { label: 'Services', num: '02', image: SECTION2_IMAGE, target: 'services' },
+  { label: 'About', num: '03', image: SECTION3_IMG1, target: 'contact' },
+  { label: 'Gallery', num: '04', image: SECTION3_BG, target: 'services' },
+  { label: 'Contact', num: '05', image: SECTION3_IMG2, target: 'contact' },
 ]
 
 /* ------------------------------------------------------------------ *
@@ -272,6 +270,15 @@ function Navbar() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  // Close any open menu and smooth-scroll to the target section.
+  const scrollToSection = (id: string) => {
+    setMenuOpen(false)
+    setOpen(false)
+    document.body.style.overflow = '' // unlock immediately so smooth scroll runs
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-2 md:py-3 bg-white/80 backdrop-blur-md">
@@ -351,11 +358,14 @@ function Navbar() {
           }`}
         >
           <div className="flex flex-col justify-center h-full px-8 gap-1">
-            {menuLinks.map((link, i) => (
+            {navItems.map((item, i) => (
               <a
-                key={link}
-                href="#"
-                onClick={() => setOpen(false)}
+                key={item.label}
+                href={`#${item.target}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToSection(item.target)
+                }}
                 className="text-4xl font-bold text-black hover:text-neutral-500 transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]"
                 style={{
                   opacity: open ? 1 : 0,
@@ -363,7 +373,7 @@ function Navbar() {
                   transitionDelay: open ? `${100 + i * 60}ms` : '0ms',
                 }}
               >
-                {link}
+                {item.label}
               </a>
             ))}
 
@@ -417,14 +427,14 @@ function Navbar() {
               className="flex flex-col justify-center"
               onMouseLeave={() => setActivePreview(0)}
             >
-              {desktopMenu.map((item, i) => (
+              {navItems.map((item, i) => (
                 <a
                   key={item.label}
-                  href="#"
+                  href={`#${item.target}`}
                   onMouseEnter={() => setActivePreview(i)}
                   onClick={(e) => {
                     e.preventDefault()
-                    setMenuOpen(false)
+                    scrollToSection(item.target)
                   }}
                   className="group flex items-baseline gap-4 lg:gap-6 border-b border-black/10 py-3 lg:py-4"
                   style={{
@@ -447,7 +457,7 @@ function Navbar() {
 
             {/* Hover preview */}
             <div className="relative h-[60vh] rounded-2xl overflow-hidden bg-neutral-100">
-              {desktopMenu.map((item, i) => (
+              {navItems.map((item, i) => (
                 <img
                   key={item.label}
                   src={item.image}
@@ -498,6 +508,7 @@ function Section1() {
 
   return (
     <section
+      id="home"
       ref={mergeRefs(sectionRef, s1Reveal.containerRef)}
       className="h-screen w-full overflow-hidden flex flex-col pt-24 md:pt-24 px-3 md:px-5 pb-1.5 md:pb-2 gap-1.5 md:gap-2"
     >
@@ -573,8 +584,9 @@ function Section2() {
 
   return (
     <section
+      id="services"
       ref={mergeRefs(sectionRef, s2Reveal.containerRef)}
-      className="min-h-screen md:h-screen w-full overflow-hidden flex flex-col pt-1.5 md:pt-2 px-3 md:px-5 pb-1.5 md:pb-2 gap-1.5 md:gap-2"
+      className="scroll-mt-20 min-h-screen md:h-screen w-full overflow-hidden flex flex-col pt-1.5 md:pt-2 px-3 md:px-5 pb-1.5 md:pb-2 gap-1.5 md:gap-2"
     >
       <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 grid-rows-[auto_auto_auto_auto] md:grid-rows-[1fr_1fr_0.8fr] gap-1.5 md:gap-2">
         {/* Card 0 — Smile Gallery */}
@@ -706,8 +718,9 @@ function Section3() {
 
   return (
     <section
+      id="contact"
       ref={s3Reveal.containerRef}
-      className="min-h-screen md:h-screen w-full overflow-hidden flex flex-col pt-1.5 md:pt-2 px-3 md:px-5 pb-1.5 md:pb-2 gap-1.5 md:gap-2"
+      className="scroll-mt-20 min-h-screen md:h-screen w-full overflow-hidden flex flex-col pt-1.5 md:pt-2 px-3 md:px-5 pb-1.5 md:pb-2 gap-1.5 md:gap-2"
     >
       <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 gap-1.5 md:gap-2">
         {/* LEFT COLUMN */}
