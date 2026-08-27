@@ -12,5 +12,24 @@
     font-family: 'Open Sauce One', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Default (arrow) cursor everywhere so text never shows the I-beam. */
+    cursor: default;
+  }
+
+  /* Pointer only on genuinely interactive elements. */
+  a,
+  button,
+  [role="button"],
+  label,
+  summary,
+  select {
+    cursor: pointer;
+  }
+
+  /* Real text-entry fields keep the text (I-beam) cursor. */
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  [contenteditable="true"] {
+    cursor: text;
   }
 }
