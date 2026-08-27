@@ -545,12 +545,6 @@ function Section1() {
         style={s1Reveal.getAnimStyle(3)}
         className="w-full flex-1 min-h-0 rounded-xl md:rounded-2xl overflow-hidden relative"
       >
-        <p className="absolute top-4 left-4 md:top-7 md:left-7 text-black text-xs md:text-sm font-semibold leading-4 md:leading-5 max-w-[200px] md:max-w-[300px] z-10">
-          We wish to provide professional dental services
-          <br />
-          that match the current technologies
-        </p>
-
         <div className="absolute bottom-5 left-3 md:bottom-8 md:left-4 z-10">
           <h1 className="text-black text-[clamp(3rem,11vw,11rem)] font-bold leading-[0.79] tracking-tight">
             Dental
