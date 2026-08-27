@@ -438,6 +438,130 @@ function Section1() {
 }
 
 /* ------------------------------------------------------------------ *
+ * SECTION 2 — SMILE GALLERY
+ * ------------------------------------------------------------------ */
+function Section2() {
+  const isMobile = useIsMobile()
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
+  const positions = useMaskPositions(sectionRef, cardsRef)
+  const sectionHeight = positions[0]?.sh ?? 0
+  const imageWidth = useImageWidth(SECTION2_IMAGE, sectionHeight)
+  const focalX = isMobile ? 0.65 : 0.8
+  const s2Reveal = useStaggeredReveal(4)
+
+  const registerCard = (i: number) => (el: HTMLDivElement | null) => {
+    cardsRef.current[i] = el
+  }
+
+  return (
+    <section
+      ref={mergeRefs(sectionRef, s2Reveal.containerRef)}
+      className="min-h-screen md:h-screen w-full overflow-hidden flex flex-col pt-1.5 md:pt-2 px-3 md:px-5 pb-1.5 md:pb-2 gap-1.5 md:gap-2"
+    >
+      <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 grid-rows-[auto_auto_auto_auto] md:grid-rows-[1fr_1fr_0.8fr] gap-1.5 md:gap-2">
+        {/* Card 0 — Smile Gallery */}
+        <MaskedCard
+          bgImage={SECTION2_IMAGE}
+          position={positions[0]}
+          imageWidth={imageWidth}
+          focalX={focalX}
+          cardRef={registerCard(0)}
+          style={s2Reveal.getAnimStyle(0)}
+          className="rounded-xl md:rounded-2xl overflow-hidden relative min-h-[160px] md:min-h-0"
+        >
+          <h2 className="absolute top-4 left-5 md:top-6 md:left-7 text-white md:text-black text-2xl md:text-3xl font-bold z-10">
+            Smile Gallery
+          </h2>
+          <span className="absolute bottom-4 left-5 md:bottom-6 md:left-7 text-white md:text-black text-xs md:text-sm font-semibold z-10">
+            Our cosmetic dental work
+          </span>
+        </MaskedCard>
+
+        {/* Card 1 — Call us (spans 2 rows on desktop) */}
+        <MaskedCard
+          bgImage={SECTION2_IMAGE}
+          position={positions[1]}
+          imageWidth={imageWidth}
+          focalX={focalX}
+          cardRef={registerCard(1)}
+          style={s2Reveal.getAnimStyle(1)}
+          className="md:row-span-2 rounded-xl md:rounded-2xl overflow-hidden relative min-h-[200px] md:min-h-0"
+        >
+          <p className="absolute bottom-16 left-5 md:bottom-20 md:left-7 text-white text-xs md:text-sm font-semibold leading-4 md:leading-5 z-10">
+            If you want a gorgeous smile,
+            <br />
+            call us to ask about a smile makeover.
+          </p>
+          <button
+            type="button"
+            className="absolute bottom-4 right-4 md:bottom-6 md:right-6 px-5 py-3 md:px-8 md:py-5 bg-white rounded-full text-black text-base md:text-xl font-bold z-10 hover:scale-105 transition-transform"
+          >
+            Call Us
+          </button>
+        </MaskedCard>
+
+        {/* Card 2 — Smile makeover */}
+        <MaskedCard
+          bgImage={SECTION2_IMAGE}
+          position={positions[2]}
+          imageWidth={imageWidth}
+          focalX={focalX}
+          cardRef={registerCard(2)}
+          style={s2Reveal.getAnimStyle(2)}
+          className="rounded-xl md:rounded-2xl overflow-hidden relative min-h-[160px] md:min-h-0"
+        >
+          <h2 className="absolute top-4 left-5 md:top-6 md:left-7 text-white md:text-black text-[clamp(3rem,7vw,6rem)] font-bold leading-[0.9] z-10">
+            Smile
+            <br />
+            makeover
+          </h2>
+        </MaskedCard>
+
+        {/* Card 3 — Services (full width) */}
+        <MaskedCard
+          bgImage={SECTION2_IMAGE}
+          position={positions[3]}
+          imageWidth={imageWidth}
+          focalX={focalX}
+          cardRef={registerCard(3)}
+          style={s2Reveal.getAnimStyle(3)}
+          className="col-span-1 md:col-span-2 rounded-xl md:rounded-2xl overflow-hidden relative min-h-[200px] md:min-h-0"
+        >
+          <div className="absolute inset-0 z-10 flex flex-wrap md:flex-nowrap gap-1.5 md:gap-2 p-2 md:p-3">
+            {services.map((svc) => (
+              <div
+                key={svc.name}
+                className={`flex-1 min-w-[calc(50%-4px)] md:min-w-0 rounded-xl md:rounded-2xl p-3 md:p-5 flex flex-col justify-between ${
+                  svc.active ? 'bg-white/90 backdrop-blur-md' : 'bg-white/20 backdrop-blur-xl'
+                }`}
+              >
+                <h3
+                  className={`text-xl md:text-4xl font-bold leading-[1.05] whitespace-pre-line ${
+                    svc.active ? 'text-black' : 'text-white'
+                  }`}
+                >
+                  {svc.name}
+                </h3>
+                {svc.num && (
+                  <span
+                    className={`self-end w-8 h-8 md:w-12 md:h-12 rounded-full border flex items-center justify-center text-xs md:text-sm font-semibold ${
+                      svc.active ? 'border-black text-black' : 'border-white text-white'
+                    }`}
+                  >
+                    {svc.num}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </MaskedCard>
+      </div>
+    </section>
+  )
+}
+
+/* ------------------------------------------------------------------ *
  * APP
  * ------------------------------------------------------------------ */
 export default function App() {
@@ -450,10 +574,11 @@ export default function App() {
       <Navbar />
 
       <Section1 />
+      <Section2 />
 
-      {/* Sections 2 and 3 are added in the next steps */}
+      {/* Section 3 is added in the next step */}
       <section className="h-screen w-full flex items-center justify-center">
-        <p className="text-neutral-400 text-sm">More sections coming next…</p>
+        <p className="text-neutral-400 text-sm">Section 3 coming next…</p>
       </section>
     </div>
   )
