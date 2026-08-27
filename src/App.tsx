@@ -843,14 +843,12 @@ function Footer() {
     <footer className="px-3 md:px-5 pt-1.5 md:pt-2 pb-3 md:pb-5">
       <div className="rounded-xl md:rounded-2xl bg-black text-white px-6 py-7 md:px-10 md:py-8">
         {/* Copyright + legal + social */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs md:text-sm text-white/50">
-          <p>
-            © {year} Dental Health. All rights reserved.{' '}
-            <span className="text-white/70">
-              POWERED by <span className="font-semibold text-white">Nikolay Stoyanov</span>
-            </span>
+        <div className="flex flex-col gap-3 md:grid md:grid-cols-3 md:items-center md:gap-4 text-xs md:text-sm text-white/50">
+          <p className="md:justify-self-start">© {year} Dental Health. All rights reserved.</p>
+          <p className="md:justify-self-center text-white/70">
+            POWERED by <span className="font-semibold text-white">Nikolay Stoyanov</span>
           </p>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 md:justify-self-end">
             {meta.map((label) => (
               <a
                 key={label}
