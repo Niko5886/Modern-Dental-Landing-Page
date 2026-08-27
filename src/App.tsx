@@ -363,6 +363,81 @@ function Navbar() {
 }
 
 /* ------------------------------------------------------------------ *
+ * SECTION 1 — HERO
+ * ------------------------------------------------------------------ */
+function Section1() {
+  const isMobile = useIsMobile()
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
+  const positions = useMaskPositions(sectionRef, cardsRef)
+  const sectionHeight = positions[0]?.sh ?? 0
+  const imageWidth = useImageWidth(HERO_IMAGE, sectionHeight)
+  const focalX = isMobile ? 0.7 : 0.8
+  const s1Reveal = useStaggeredReveal(4)
+
+  const registerCard = (i: number) => (el: HTMLDivElement | null) => {
+    cardsRef.current[i] = el
+  }
+
+  return (
+    <section
+      ref={mergeRefs(sectionRef, s1Reveal.containerRef)}
+      className="h-screen w-full overflow-hidden flex flex-col pt-24 md:pt-24 px-3 md:px-5 pb-1.5 md:pb-2 gap-1.5 md:gap-2"
+    >
+      {/* Feature bars */}
+      {featureBars.map((label, i) => (
+        <MaskedCard
+          key={label}
+          bgImage={HERO_IMAGE}
+          position={positions[i]}
+          imageWidth={imageWidth}
+          focalX={focalX}
+          cardRef={registerCard(i)}
+          style={s1Reveal.getAnimStyle(i)}
+          className="w-full h-14 md:h-20 shrink-0 rounded-xl md:rounded-2xl overflow-hidden relative"
+        >
+          <span className="flex items-center justify-center h-full text-black text-lg md:text-3xl font-bold text-center relative z-10">
+            {label}
+          </span>
+        </MaskedCard>
+      ))}
+
+      {/* Main hero card */}
+      <MaskedCard
+        bgImage={HERO_IMAGE}
+        position={positions[3]}
+        imageWidth={imageWidth}
+        focalX={focalX}
+        cardRef={registerCard(3)}
+        style={s1Reveal.getAnimStyle(3)}
+        className="w-full flex-1 min-h-0 rounded-xl md:rounded-2xl overflow-hidden relative"
+      >
+        <p className="absolute top-4 left-4 md:top-7 md:left-7 text-black text-xs md:text-sm font-semibold leading-4 md:leading-5 max-w-[200px] md:max-w-[300px] z-10">
+          We wish to provide professional dental services
+          <br />
+          that match the current technologies
+        </p>
+
+        <div className="absolute bottom-5 left-3 md:bottom-8 md:left-4 z-10">
+          <span className="block text-black text-xs md:text-sm font-semibold mb-1 md:mb-2">
+            Trusted Dentist in West New York
+          </span>
+          <h1 className="text-black text-[clamp(3rem,11vw,11rem)] font-bold leading-[0.79] tracking-tight">
+            Dental
+            <br />
+            Care
+          </h1>
+        </div>
+
+        <span className="absolute bottom-6 right-4 md:bottom-10 md:right-8 text-white text-xs md:text-sm font-semibold z-10">
+          Free Consultation
+        </span>
+      </MaskedCard>
+    </section>
+  )
+}
+
+/* ------------------------------------------------------------------ *
  * APP
  * ------------------------------------------------------------------ */
 export default function App() {
@@ -374,9 +449,11 @@ export default function App() {
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <Navbar />
 
-      {/* Sections are added in the next steps */}
+      <Section1 />
+
+      {/* Sections 2 and 3 are added in the next steps */}
       <section className="h-screen w-full flex items-center justify-center">
-        <p className="text-neutral-400 text-sm">Sections coming next…</p>
+        <p className="text-neutral-400 text-sm">More sections coming next…</p>
       </section>
     </div>
   )
