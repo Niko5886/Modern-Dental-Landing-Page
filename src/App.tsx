@@ -837,53 +837,11 @@ function Section3() {
  * ------------------------------------------------------------------ */
 function Footer() {
   const year = new Date().getFullYear()
-  const go = (id: string) =>
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-
-  const nav = [
-    { label: 'Home', target: 'home' },
-    { label: 'Services', target: 'services' },
-    { label: 'Gallery', target: 'services' },
-    { label: 'Contact', target: 'contact' },
-  ]
   const meta = ['Privacy', 'Terms', 'Instagram', 'Facebook']
 
   return (
     <footer className="px-3 md:px-5 pt-1.5 md:pt-2 pb-3 md:pb-5">
       <div className="rounded-xl md:rounded-2xl bg-black text-white px-6 py-7 md:px-10 md:py-8">
-        {/* Brand + nav */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <button
-            type="button"
-            onClick={() => go('home')}
-            aria-label="Dental Health — back to top"
-            className="flex flex-col text-left hover:opacity-70 transition-opacity duration-200 w-fit"
-          >
-            <span className="text-xl md:text-2xl font-extrabold uppercase tracking-tight leading-none">
-              Dental Health
-            </span>
-            <span className="text-[9px] md:text-[10px] font-medium leading-none mt-1.5 opacity-60">
-              quality healthcare
-            </span>
-          </button>
-
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            {nav.map((item) => (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => go(item.target)}
-                className="text-sm font-semibold text-white/80 hover:text-white transition-colors duration-200"
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        {/* Divider */}
-        <div className="my-5 md:my-6 h-px bg-white/15" />
-
         {/* Copyright + legal + social */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs md:text-sm text-white/50">
           <p>© {year} Dental Health. All rights reserved.</p>
