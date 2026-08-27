@@ -14,6 +14,11 @@
     -moz-osx-font-smoothing: grayscale;
     /* Default (arrow) cursor everywhere so text never shows the I-beam. */
     cursor: default;
+    /* Non-selectable UI text: clicking never places a text caret. */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   /* Pointer only on genuinely interactive elements. */
@@ -26,10 +31,14 @@
     cursor: pointer;
   }
 
-  /* Real text-entry fields keep the text (I-beam) cursor. */
+  /* Real text-entry fields keep the text (I-beam) cursor and remain selectable. */
   input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
   textarea,
   [contenteditable="true"] {
     cursor: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 }
