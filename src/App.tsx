@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode, RefObject } from 'react'
 
 /* ------------------------------------------------------------------ *
@@ -203,40 +203,6 @@ function MaskedCard({
   return (
     <div ref={cardRef} className={className} style={{ ...bgStyle, ...style }}>
       {children}
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ *
- * SPLASH SCREEN
- * ------------------------------------------------------------------ */
-function SplashScreen({ onComplete }: { onComplete: () => void }) {
-  const [count, setCount] = useState(0)
-  const [exiting, setExiting] = useState(false)
-
-  useEffect(() => {
-    let step = 0
-    const interval = window.setInterval(() => {
-      step += 1
-      setCount(step)
-      if (step >= 100) {
-        window.clearInterval(interval)
-        window.setTimeout(() => setExiting(true), 200)
-        window.setTimeout(() => onComplete(), 900)
-      }
-    }, 20)
-    return () => window.clearInterval(interval)
-  }, [onComplete])
-
-  return (
-    <div
-      className={`fixed inset-0 z-[100] bg-white flex items-end justify-start transition-opacity duration-700 ${
-        exiting ? 'opacity-0' : 'opacity-100'
-      }`}
-    >
-      <span className="text-7xl md:text-9xl font-bold tabular-nums p-6 md:p-10 leading-none text-black">
-        {count}
-      </span>
     </div>
   )
 }
@@ -950,12 +916,8 @@ function BackToTop() {
  * APP
  * ------------------------------------------------------------------ */
 export default function App() {
-  const [showSplash, setShowSplash] = useState(true)
-  const handleSplashComplete = useCallback(() => setShowSplash(false), [])
-
   return (
     <div className="bg-white">
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       <Navbar />
 
       <Section1 />
